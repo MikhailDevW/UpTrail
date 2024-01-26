@@ -1,2 +1,0 @@
-# UpTrail
-Save your track.
