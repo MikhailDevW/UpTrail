@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dev отправка данных в БД</title>
+    <title>Пример использования getBounds() в Яндекс.Картах</title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=1f84b318-b91f-4a63-a711-ead9d35814eb&lang=ru_RU" type="text/javascript"></script>
     <style>
-    .pipka {
-    position: absolute;
-    top:  50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    }
+        #map {
+            width: 800px;
+            height: 600px;
+        }
     </style>
 </head>
-
 <body>
- <dev class="pipka">
-    <h2>Проверка работоспособности моего быдлокода</h2>
+    <div id="map"></div>
+    <script>
+        ymaps.ready(init);
 
-    <form action="/tracks" method="post" enctype="multipart/form-data">
-        <label for="name">Имя:</label>
-        <input type="text" id="name" name="name"><br><br>
+        function init() {
+            var myMap = new ymaps.Map('map', {
+                center: [55.755814, 37.617635],
+                zoom: 10
+            });
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br><br>
+            var bounds = myMap.getBounds();
 
-        <label for="file">Файл:</label>
-        <input type="file" id="file" name="file"><br><br>
-
-        <input type="submit" value="Отправить">
-    </form>
-  </dev>
+            console.log('Верхняя левая точка: ' + bounds[0]);
+            console.log('Нижняя правая точка: ' + bounds[1]);
+        }
+    </script>
 </body>
 </html>
