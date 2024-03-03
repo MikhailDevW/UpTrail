@@ -1,0 +1,20 @@
+version: '3'
+services:
+
+  postgis:
+    image: postgis/postgis
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db/temp_create_table.sql:/docker-entrypoint-initdb.d/temp_create_table.sql
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db/temp_create_table.sql:/docker-entrypoint-initdb.d/temp_create_table.sql
+    ports:
+      - 5432:5432
