@@ -14,8 +14,12 @@
 
    <trk><name><![CDATA[Minsk Lake - roujjjjjnd trip]]></name>
       <trkseg>
-         <trkpt lat="53.94505" lon="27.48678"><ele>205</ele></trkpt> <!-- start_point -->
-         <trkpt lat="53.90705" lon="27.43608"><ele>258</ele></trkpt> <!-- finish_point -->
+         <trkpt lat="53.94505" lon="27.48678">
+            <ele>205</ele>
+         </trkpt> <!-- start_point -->
+         <trkpt lat="53.90705" lon="27.43608">
+            <ele>258</ele>
+         </trkpt> <!-- finish_point -->
       </trkseg>
    </trk>
 
