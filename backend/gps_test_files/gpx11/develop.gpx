@@ -9,13 +9,17 @@
    targetNamespace="http://www.topografix.com/GPX/1/1"
    elementFormDefault="qualified">
    <metadata>
-      <name><![CDATA[Minjjjjjsk Lake - round trip]]></name>
+      <name><![CDATA[Minsk Lake - round trip]]></name>
    </metadata>
 
-   <trk><name><![CDATA[Minsk Lake - roujjjjjnd trip]]></name>
+   <trk><name><![CDATA[Minsk Lake - round trip]]></name>
       <trkseg>
-         <trkpt lat="53.94505" lon="27.48678"><ele>205</ele></trkpt> <!-- start_point -->
-         <trkpt lat="53.90705" lon="27.43608"><ele>258</ele></trkpt> <!-- finish_point -->
+         <trkpt lat="53.94505" lon="27.48678">
+            <ele>205</ele>
+         </trkpt> <!-- start_point -->
+         <trkpt lat="53.90705" lon="27.43608">
+            <ele>258</ele>
+         </trkpt> <!-- finish_point -->
       </trkseg>
    </trk>
 
