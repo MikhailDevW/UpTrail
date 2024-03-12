@@ -1,3 +1,5 @@
+import logging
+
 import gpxpy
 from fastapi import status
 from fastapi.exceptions import HTTPException
@@ -5,6 +7,8 @@ from haversine import haversine, Unit
 from lxml import etree
 
 from config import BASE_DIR
+
+logger = logging.getLogger("uvicorn.develop")
 
 
 class TrackManager:
@@ -33,11 +37,16 @@ class TrackManager:
     @classmethod
     def get_track(cls, track):
         """Отдаем обьект трека."""
+        logger.debug(f"enter in class method - {type(track)}, {track}")
+
         if cls.__get_format(track) == "gpx" and cls.__gpx_validate(track.file):
             track = GPXTrack(track.file)
             return track
         else:
-            raise HTTPException(400, "Not valid file schema.")
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                "Not valid file schema."
+            )
 
     @classmethod
     def __gpx_validate(cls, gpx, validation_schema=GPX_SCHEMA_v1) -> bool:
@@ -47,6 +56,8 @@ class TrackManager:
         Надо смотреть дополнительно попоже.
         !!!!!
         """
+        logger.debug(f"enter in class method - {type(gpx)}, {gpx}")
+
         xmlschema_doc = etree.parse(validation_schema)
         xmlschema = etree.XMLSchema(xmlschema_doc)
         return True

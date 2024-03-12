@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, UploadFile, File, status
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -11,6 +13,8 @@ templates = Jinja2Templates(
     directory=(TEMPLATE_DIR / 'frontend' / 'templates')
 )
 
+logger = logging.getLogger("uvicorn.develop")
+
 
 @router.get("/get_tracks")
 async def get_tracks(lt_lat=55.4, lt_long=43.4, rb_lat=54, rb_long=42):
@@ -18,6 +22,7 @@ async def get_tracks(lt_lat=55.4, lt_long=43.4, rb_lat=54, rb_long=42):
     Функция для получение всех треков,
     которые расположены в заданном квадрате.
     """
+    logger.debug(msg="enter in func")
     # tracks = get_tracks_from_db()
     return {
         "myResponse": "hello"
@@ -32,6 +37,7 @@ async def post_track(
     Публикация нового трека.
     Пользователь загружает один файл своего пройденого трека.
     """
+    logger.debug(msg="enter in func")
     parse_track = TrackManager.get_track(track_file)
     # add_track_2db(
     #     title=info_data.title,
