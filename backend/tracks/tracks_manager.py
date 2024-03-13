@@ -1,4 +1,5 @@
-import logging
+import os
+from tempfile import SpooledTemporaryFile
 
 import gpxpy
 from fastapi import status
@@ -20,8 +21,10 @@ class TrackManager:
 
     RADIAN_COEFF = 0.01744  # Преобразуем радианы в градусы
     EARTH_RADIUS = 6371     # Радиус земли. Усредненный
+
     GPX_SCHEMA_v1 = BASE_DIR / "gps_test_files/gpx_strict.xsd"
-    GPX_SCHEMA_v2 = BASE_DIR / "gps_test_files/gpx_strict2.xsd"
+    GPX_SCHEMA_GPX11 = BASE_DIR / "gps_test_files/gpx_strict2.xsd"
+    GPX_SCHEMA_UPTRAIL = BASE_DIR / "gps_test_files/uptrail_custom.xsd"
 
     @classmethod
     def __get_format(cls, track: str) -> str:
@@ -35,12 +38,10 @@ class TrackManager:
         return "gpx"
 
     @classmethod
-    def get_track(cls, track):
+    def get_track(cls, track_file):
         """Отдаем обьект трека."""
-        logger.debug(f"enter in class method - {type(track)}, {track}")
-
-        if cls.__get_format(track) == "gpx" and cls.__gpx_validate(track.file):
-            track = GPXTrack(track.file)
+        if cls.__get_format(track_file) == "gpx" and cls.__gpx_validate(track_file):
+            track = GPXTrack(track_file.file)
             return track
         else:
             raise HTTPException(
@@ -48,18 +49,33 @@ class TrackManager:
                 "Not valid file schema."
             )
 
-    @classmethod
-    def __gpx_validate(cls, gpx, validation_schema=GPX_SCHEMA_v1) -> bool:
+    def __gpx_validate(
+        track_file,
+        valid_schema=GPX_SCHEMA_UPTRAIL
+    ) -> bool:
         """
-        !!!!!
         Валидация gpx файла. Но пока не реализовано и не работает.
         Надо смотреть дополнительно попоже.
-        !!!!!
         """
-        logger.debug(f"enter in class method - {type(gpx)}, {gpx}")
+        # Сохраняем загруженный файл во временный файл
+        with open(f"temp_{track_file.filename}", "wb") as temp_file:
+            temp_file.write(track_file.file.read())
 
-        xmlschema_doc = etree.parse(validation_schema)
-        xmlschema = etree.XMLSchema(xmlschema_doc)
+        # Читаем данные из временного файла и создаем XML дерево
+        tree = etree.parse(temp_file.name)
+        root = tree.getroot()
+
+        # Определяем схему XSD
+        schema = etree.XMLSchema(file=valid_schema)
+
+        # Проверяем соответствие XML данных схеме XSD
+        if not schema.validate(root):
+            print("XML data is not valid.")
+            os.remove(BASE_DIR / f"temp_{track_file.filename}")
+            raise HTTPException(400, "XML is not valid.")
+        print("XML data is valid.")
+        os.remove(BASE_DIR / f"temp_{track_file.filename}")
+        track_file.file.seek(0)
         return True
 
     @classmethod
@@ -91,7 +107,7 @@ class GPXTrack:
 
         self.__post_init_routine(file)
 
-    def __post_init_routine(self, file):
+    def __post_init_routine(self, file: SpooledTemporaryFile):
         self.__track = gpxpy.parse(file)
         self.__version = self.__track.version
         if self.__version == "1.1":

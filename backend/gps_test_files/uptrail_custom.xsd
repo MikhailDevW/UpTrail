@@ -42,12 +42,12 @@
                 </xsd:annotation>
             </xsd:element>
         </xsd:sequence>
-        <xsd:attribute name="version" type="xsd:string" use="required" fixed="1.1">
+        <xsd:attribute name="version" type="xsd:string" fixed="1.1">
             <xsd:annotation>
                 <xsd:documentation> You must include the version number in your GPX document. </xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="creator" type="xsd:string" use="required">
+        <xsd:attribute name="creator" type="xsd:string">
             <xsd:annotation>
                 <xsd:documentation> You must include the name or URL of the software that created your GPX document. This allows others to inform the creator of a GPX instance document that fails to validate. </xsd:documentation>
             </xsd:annotation>
@@ -341,7 +341,7 @@
             <xsd:documentation> You can add extend GPX by adding your own elements from another schema here. </xsd:documentation>
         </xsd:annotation>
         <xsd:sequence>
-            <xsd:any namespace="##other" processContents="strict" minOccurs="0" maxOccurs="unbounded">
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:documentation> You can add extend GPX by adding your own elements from another schema here. </xsd:documentation>
                 </xsd:annotation>
