@@ -19,4 +19,4 @@ def test_get_track():
 
 
 def test_hello():
-    assert 1 == 1, 'Number is not equal'
+    assert 1 == 1, "Number is not equal"
