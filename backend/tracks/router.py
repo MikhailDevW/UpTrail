@@ -1,13 +1,18 @@
 import os
 import logging
 from pathlib import Path
+from typing import Union
+from typing_extensions import Annotated
 
-from fastapi import APIRouter, UploadFile, File, status
+from fastapi import (
+    APIRouter, File, Path as Api_Path, Query, status, UploadFile,
+)
 from fastapi.templating import Jinja2Templates
 from lxml import etree
 
 from .tracks_manager import TrackManager
 from config import BASE_DIR
+
 
 TEMPLATE_DIR = Path(__file__).parent.parent.parent.resolve()
 
@@ -20,7 +25,12 @@ logger = logging.getLogger("uvicorn.develop")
 
 
 @router.get("/get_tracks")
-async def get_tracks(lt_lat=55.4, lt_long=43.4, rb_lat=54, rb_long=42):
+async def get_tracks(
+    lt_lat: Annotated[Union[int, float], Query(ge=-90, le=90)] = 55,
+    lt_long: Annotated[Union[int, float], Query(ge=-90, le=90)] = 43,
+    rb_lat: Annotated[Union[int, float], Query(ge=-90, le=90)] = 54,
+    rb_long: Annotated[Union[int, float], Query(ge=-90, le=90)] = 42,
+):
     """
     Функция для получение всех треков,
     которые расположены в заданном квадрате.
@@ -51,6 +61,16 @@ async def post_track(track_file: UploadFile = File(...)):
         "longitute": parse_track.get_general_info()[1],
         "distance": parse_track.get_general_info()[2],
     }
+
+
+@router.patch("/track/{track_id}")
+async def patch_track(track_id: Annotated[int, Api_Path(gt=0)]):
+    return {track_id: "patched"}
+
+
+@router.delete("/track/{track_id}")
+async def delete_track(track_id: Annotated[int, Api_Path(gt=0)]):
+    return {track_id: "deleted"}
 
 
 @router.post("/validate_xml/")

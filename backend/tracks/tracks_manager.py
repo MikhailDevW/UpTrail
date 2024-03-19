@@ -20,17 +20,17 @@ class TrackManager:
     Некоторые базовые расчеты (расстояние между двумя точками).
     """
 
-    RADIAN_COEFF = 0.01744  # Преобразуем радианы в градусы
-    EARTH_RADIUS = 6371     # Радиус земли. Усредненный
+    RADIAN_COEFF: float = 0.01744  # Преобразуем радианы в градусы
+    EARTH_RADIUS: int = 6371     # Радиус земли. Усредненный
 
-    GPX_SCHEMA_GPX10 = BASE_DIR / "gps_test_files/gpx_strict.xsd"
-    GPX_SCHEMA_GPX11 = BASE_DIR / "gps_test_files/gpx_strict2.xsd"
-    GPX_SCHEMA_UPTRAIL = BASE_DIR / "gps_test_files/uptrail_custom.xsd"
+    GPX_SCHEMA_GPX10: str = BASE_DIR / "gps_test_files/gpx_strict.xsd"
+    GPX_SCHEMA_GPX11: str = BASE_DIR / "gps_test_files/gpx_strict2.xsd"
+    GPX_SCHEMA_UPTRAIL: str = BASE_DIR / "gps_test_files/uptrail_custom.xsd"
 
     @classmethod
     def __get_format(cls, track: str) -> str:
         """Получаем формат файла."""
-        split_name = track.filename.split('.')
+        split_name: list[str] = track.filename.split(".")
         if str(split_name[-1]) != "gpx":
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
@@ -52,7 +52,9 @@ class TrackManager:
         track = GPXTrack(track_file.file)
         return track
 
+    @classmethod
     def __gpx_validate(
+        cls,
         track_file,
         valid_schema=GPX_SCHEMA_UPTRAIL
     ) -> bool:
@@ -86,9 +88,13 @@ class TrackManager:
 
     @classmethod
     def haversine_distance(
-        cls, lat_start, long_start, lat_end, long_end
+        cls,
+        lat_start: float,
+        long_start: float,
+        lat_end: float,
+        long_end: float,
     ) -> float:
-        distance = haversine(
+        distance: float = haversine(
             point1=(lat_start, long_start),
             point2=(lat_end, long_end),
             unit=Unit.METERS,
@@ -113,16 +119,19 @@ class GPXTrack:
 
         self.__post_init_routine(file)
 
-    def __post_init_routine(self, file: SpooledTemporaryFile):
+    def __post_init_routine(self, file: SpooledTemporaryFile) -> None:
         self.__track = gpxpy.parse(file)
         self.__version = self.__track.version
         if self.__version == "1.1":
             self.__tracks_amount = len(self.__track.tracks)
             self.__points_amount = self.__track.get_points_no()
-            for i in range(self.__tracks_amount):
-                self.__segments_amount += len(self.__track.tracks[i].segments)
+            for segment_no in range(self.__tracks_amount):
+                self.__segments_amount += len(self.__track.tracks[segment_no].segments)
         else:
-            raise HTTPException(400, "Not supported version.")
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                "Not supported version."
+            )
 
     @classmethod
     def get_json_from_gpx(cls, file):
@@ -137,18 +146,21 @@ class GPXTrack:
     def get_start_point(self) -> tuple[float, float]:
         """получение координаты стратовой точки трека."""
         if self.__track.version == "1.1" and not self.is_empty():
-            self.__start_latitude = self.__track.tracks[0].segments[0].points[0].latitude
-            self.__start_longitude = self.__track.tracks[0].segments[0].points[0].longitude
+            self.__start_latitude: float = self.__track.tracks[0].segments[0].points[0].latitude
+            self.__start_longitude: float = self.__track.tracks[0].segments[0].points[0].longitude
             return self.__start_latitude, self.__start_longitude
         if self.__track.version == "1.0" and not self.is_empty():
-            self.__start_latitude = self.__track.waypoints[0].latitude
-            self.__start_longitude = self.__track.waypoints[0].longitude
+            self.__start_latitude: float = self.__track.waypoints[0].latitude
+            self.__start_longitude: float = self.__track.waypoints[0].longitude
         else:
-            raise HTTPException(400, "Wrong version or track is empty.")
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                "Wrong version or track is empty."
+            )
 
     def get_total_distance(self) -> float:
         """Расчет общей дисатнции трека."""
-        distance = 0
+        distance: float = 0
         for track in range(self.__tracks_amount):
             for segment in range(self.__segments_amount):
                 for point_no, _ in enumerate(self.__track.tracks[track].segments[segment].points):
