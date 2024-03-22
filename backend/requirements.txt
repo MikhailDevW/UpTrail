@@ -3,3 +3,6 @@ pytest==8.0.0
 gpxpy==gpxpy-1.6.2
 gunicorn==20.1.0
 lxml==5.1.0
+psycopg2_binary==2.9.9
+alembic==1.13.1
+asyncpg==0.29.0

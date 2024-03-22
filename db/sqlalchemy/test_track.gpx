@@ -1,0 +1,4 @@
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="mapsdirections.info"><metadata><name>test_route</name><desc></desc><time>2024-04-13 16:07:50</time></metadata><trk><name></name><desc>stroke=#2593d9
+fill=#2593d9
+stroke-opacity=1
+stroke-width=3</desc><trkseg><trkpt lat="59.939065" lon="30.315802"><ele>-1</ele></trkpt><trkpt lat="60.005645" lon="30.692874"><ele>-1</ele></trkpt></trkseg></trk></gpx>

@@ -137,8 +137,9 @@ class GPXTrack:
     def get_start_point(self) -> tuple[float, float]:
         """получение координаты стратовой точки трека."""
         if self.__track.version == "1.1" and not self.is_empty():
-            self.__start_latitude = self.__track.tracks[0].segments[0].points[0].latitude
-            self.__start_longitude = self.__track.tracks[0].segments[0].points[0].longitude
+            prefix = self.__track.tracks[0].segments[0].points[0]
+            self.__start_latitude = prefix.latitude
+            self.__start_longitude = prefix.longitude
             return self.__start_latitude, self.__start_longitude
         if self.__track.version == "1.0" and not self.is_empty():
             self.__start_latitude = self.__track.waypoints[0].latitude
@@ -151,15 +152,20 @@ class GPXTrack:
         distance = 0
         for track in range(self.__tracks_amount):
             for segment in range(self.__segments_amount):
-                for point_no, _ in enumerate(self.__track.tracks[track].segments[segment].points):
+                for point_no, _ in enumerate(
+                    self.__track.tracks[track].segments[segment].points
+                ):
                     if point_no == 0:
                         continue
                     else:
+                        prefix = (
+                            self.__track.tracks[track].segments[segment].points
+                        )
                         distance += TrackManager.haversine_distance(
-                            self.__track.tracks[track].segments[segment].points[point_no-1].latitude,
-                            self.__track.tracks[track].segments[segment].points[point_no-1].longitude,
-                            self.__track.tracks[track].segments[segment].points[point_no].latitude,
-                            self.__track.tracks[track].segments[segment].points[point_no].longitude,
+                            prefix[point_no-1].latitude,
+                            prefix[point_no-1].longitude,
+                            prefix[point_no].latitude,
+                            prefix[point_no].longitude,
                         )
         return round(distance, 3)
 
