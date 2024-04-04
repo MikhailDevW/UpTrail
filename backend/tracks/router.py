@@ -1,26 +1,19 @@
-import os
 import logging
-from pathlib import Path
+from lxml import etree
+import os
 from typing import Union
 from typing_extensions import Annotated
 
 from fastapi import (
     APIRouter, File, Path as Api_Path, Query, status, UploadFile,
 )
-from fastapi.templating import Jinja2Templates
-from lxml import etree
 
-from .tracks_manager import TrackManager
 from config import BASE_DIR
+from database import add_track, get_all_tracks
+from .tracks_manager import TrackManager
 
-
-TEMPLATE_DIR = Path(__file__).parent.parent.parent.resolve()
 
 router = APIRouter(prefix='/tracks', tags=['Tracks'])
-templates = Jinja2Templates(
-    directory=(TEMPLATE_DIR / 'frontend' / 'templates')
-)
-
 logger = logging.getLogger("uvicorn.develop")
 
 
@@ -36,9 +29,9 @@ async def get_tracks(
     которые расположены в заданном квадрате.
     """
     logger.debug(msg="enter in func")
-    # tracks = get_tracks_from_db()
+    res = await get_all_tracks(lt_lat, lt_long, rb_lat, rb_long)
     return {
-        "myResponse": "hello"
+        "tracks": res,
     }
 
 
@@ -49,17 +42,16 @@ async def post_track(track_file: UploadFile = File(...)):
     Пользователь загружает один файл своего пройденого трека.
     """
     logger.debug(msg="enter in func")
-    parse_track = TrackManager.get_track(track_file)
-    # add_track_2db(
-    #     title=info_data.title,
-    #     description=info_data.description,
-    #     is_public=info_data.is_public,
-    #     *parse_track.get_info()
-    # )
+    parsed_track = TrackManager.get_track(track_file)
+    await add_track(
+        parsed_track.get_general_info()[0],
+        parsed_track.get_general_info()[1],
+        parsed_track.get_general_info()[2],
+    )
     return {
-        "latitue": parse_track.get_general_info()[0],
-        "longitute": parse_track.get_general_info()[1],
-        "distance": parse_track.get_general_info()[2],
+        "latitue": parsed_track.get_general_info()[0],
+        "longitute": parsed_track.get_general_info()[1],
+        "distance": parsed_track.get_general_info()[2],
     }
 
 
