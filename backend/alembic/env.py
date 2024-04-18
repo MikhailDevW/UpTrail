@@ -1,15 +1,12 @@
-import os
-import sys
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-sys.path.append(os.path.join(sys.path[0], 'backend'))
-
+from tracks.models import TrackModel
+from users.models import User
 from config import DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASSWORD
-from database import database_url_async
-from tracks.models import Base
+from database import database_url_async, Base
 
 
 config = context.config

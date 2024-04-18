@@ -4,8 +4,9 @@ import os
 from typing import Union
 from typing_extensions import Annotated
 
+
 from fastapi import (
-    APIRouter, File, Path as Api_Path, Query, status, UploadFile,
+    APIRouter, Depends, File, Path as Api_Path, Query, status, UploadFile
 )
 
 from config import BASE_DIR
@@ -36,7 +37,10 @@ async def get_tracks(
 
 
 @router.post("/post_track", status_code=status.HTTP_201_CREATED)
-async def post_track(track_file: UploadFile = File(...)):
+async def post_track(
+    track_file: UploadFile = File(...),
+    user=Depends(),
+):
     """
     Публикация нового трека.
     Пользователь загружает один файл своего пройденого трека.

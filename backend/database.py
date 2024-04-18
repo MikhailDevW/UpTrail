@@ -1,10 +1,14 @@
 import asyncio
 
-from sqlalchemy import select, text
+from sqlalchemy import text, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 
-from tracks.models import Base, TrackModel
 from config import DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASSWORD
+
+
+class Base(DeclarativeBase):
+    pass
 
 
 def database_url_async():
@@ -59,6 +63,6 @@ if __name__ == "__main__":
     async def test_case_del_and_create():
         async with async_engine.begin() as connect:
             await connect.run_sync(Base.metadata.drop_all)
-            await connect.run_sync(Base.metadata.create_all)
+            # await connect.run_sync(Base.metadata.create_all)
 
     asyncio.run(test_case_del_and_create())
