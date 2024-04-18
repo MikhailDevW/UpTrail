@@ -4,14 +4,15 @@ import os
 from typing import Union
 from typing_extensions import Annotated
 
+
 from fastapi import (
-    APIRouter, File, Path as Api_Path, Query, status, UploadFile,
+    APIRouter, Depends, File, Path as Api_Path, Query, status, UploadFile
 )
 
-from config import BASE_DIR
-from database import add_track, get_all_tracks
 from .tracks_manager import TrackManager
-
+from config import BASE_DIR
+from .crud import add_track, get_all_tracks
+from users.router import current_user
 
 router = APIRouter(prefix='/tracks', tags=['Tracks'])
 logger = logging.getLogger("uvicorn.develop")
@@ -35,8 +36,14 @@ async def get_tracks(
     }
 
 
-@router.post("/post_track", status_code=status.HTTP_201_CREATED)
-async def post_track(track_file: UploadFile = File(...)):
+@router.post(
+    "/post_track",
+    dependencies=[Depends(current_user)],
+    status_code=status.HTTP_201_CREATED
+)
+async def post_track(
+    track_file: UploadFile = File(...),
+):
     """
     Публикация нового трека.
     Пользователь загружает один файл своего пройденого трека.

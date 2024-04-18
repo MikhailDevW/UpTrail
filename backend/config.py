@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).parent.resolve()
 load_dotenv()
@@ -13,6 +14,16 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASSWORD = os.environ.get("DB_PASSWORD")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
-API_NAME = "Track"
-DEFAULT_HOST = "0.0.0.0"
-DEFAULT_PORT = 8000
+
+class Settings(BaseSettings):
+    API_NAME: str = "Track"
+    DEFAULT_HOST: str = "0.0.0.0"
+    DEFAULT_PORT: int = 8000
+    description: str = "Track"
+    SECRET_KEY: str = os.environ.get("SECRET_KEY")
+
+    lifetime_seconds: int = 3000
+    base_dir: Path = Path(__file__).parent.resolve()
+
+
+settings = Settings()

@@ -2,7 +2,8 @@ from sqlalchemy import (
     CheckConstraint, DATE, FLOAT, Integer, JSON,
     PrimaryKeyConstraint, String, UniqueConstraint
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, validates
+from sqlalchemy.orm import Mapped, mapped_column, validates
+from database import Base
 
 MIN_NAME_LEN: int = 7
 MAX_NAME_LEN: int = 255
@@ -13,10 +14,6 @@ MAX_AUTHOR_LEN: int = 255
 
 MIN_ROUTE_VALUE: int = 0
 MAX_ROUTE_VALUE: int = 200000
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 class TrackModel(Base):
