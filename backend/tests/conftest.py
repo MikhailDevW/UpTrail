@@ -20,7 +20,3 @@ if not (BACKEND_DIR / BACKEND_DIR_NAME / FILENAME).is_file():
         f"В директории `{BACKEND_DIR}` не найден файл `{FILENAME}`. "
         f"Убедитесь, что у вас верная структура проекта."
     )
-
-# pytest_plugins = [
-#     "tests.fixtures.fixture_user",
-# ]

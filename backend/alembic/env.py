@@ -1,15 +1,12 @@
-import os
-import sys
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-sys.path.append(os.path.join(sys.path[0], 'backend'))
-
+from tracks.models import TrackModel
+from users.models import User
 from config import DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASSWORD
-from database import database_url_async
-from tracks.models import Base
+from database import database_url_async, Base
 
 
 config = context.config
@@ -29,16 +26,7 @@ config.set_section_option(section, "DB_PASSWORD", DB_PASSWORD)
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
 target_metadata = [Base.metadata,]
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline() -> None:
