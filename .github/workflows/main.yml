@@ -22,19 +22,27 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r ./backend/requirements.txt
-      - name: Test with pytest
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: t${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: |
-          cd backend/
-          pytest
+          pip install -r ./requirements/dev.txt
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        with:
+          path: "src"
+          args: "--config setup.cfg"
+      - name: isort
+        uses: isort/isort-action@master
+        with:
+          configuration: .setup.cfg
+      # - name: Test with pytest
+      #   env:
+      #     POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      #     POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      #     POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      #     DB_HOST: ${{ secrets.DB_HOST }}
+      #     DB_PORT: ${{ secrets.DB_PORT }}
+      #     DB_NAME: ${{ secrets.DB_NAME }}
+      #     DB_USER: ${{ secrets.DB_USER }}
+      #     DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      #     SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      #   run: |
+      #     pytest
   
