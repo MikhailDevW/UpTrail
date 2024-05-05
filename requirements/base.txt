@@ -1,0 +1,9 @@
+FastAPI[all]==0.109.1
+gpxpy==1.6.2
+gunicorn==20.1.0
+lxml==5.1.0
+haversine==2.8.1
+SQLAlchemy==2.0.29
+asyncpg==0.29.0
+fastapi-users==13.0.0
+fastapi-users-db-sqlalchemy==6.0.1

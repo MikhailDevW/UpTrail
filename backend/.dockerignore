@@ -1,9 +1,0 @@
-.idea/
-__pycache__
-.git
-.*ignore
-Dockerfile
-README.md
-docker-compose.yml
-venv
-db.sqlite3 
