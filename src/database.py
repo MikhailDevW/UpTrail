@@ -9,14 +9,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from src.config import settings
 
 
-class Base(DeclarativeBase):
-    id: Mapped[int] = mapped_column(
-        Integer,
-        primary_key=True,
-        autoincrement=True,
-    )
-
-
 def database_url_async():
     return (
         f"postgresql+asyncpg:"
@@ -41,3 +33,11 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 async def get_db_version():
     async with async_engine.connect() as db_connection:
         await db_connection.execute(text("SELECT VERSION()"))
+
+
+class Base(DeclarativeBase):
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+    )

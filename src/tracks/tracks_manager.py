@@ -66,8 +66,7 @@ class TrackManager:
         valid_schema=GPX_SCHEMA_UPTRAIL
     ) -> bool:
         """
-        Валидация gpx файла. Но пока не реализовано и не работает.
-        Надо смотреть дополнительно попоже.
+        Валидация gpx файла согласно стандарта.
         """
         # Сохраняем загруженный файл во временный файл
         with open(f"temp_{track_file.filename}", "wb") as temp_file:
@@ -76,20 +75,17 @@ class TrackManager:
         # Читаем данные из временного файла и создаем XML дерево
         tree = etree.parse(temp_file.name)
         root = tree.getroot()
-
         # Определяем схему XSD
         schema = etree.XMLSchema(file=valid_schema)
 
         # Проверяем соответствие XML данных схеме XSD
         if not schema.validate(root):
-            print("XML data is not valid.")
             os.remove(settings.BASE_DIR / f"temp_{track_file.filename}")
             raise HTTPException(
                 status.HTTP_400_BAD_REQUEST,
                 "XML is not valid."
             )
-        print("XML data is valid.")
-        os.remove(settings.BASE_DIR / f"temp_{track_file.filename}")
+        os.remove(settings.BASE_DIR.parent / f"temp_{track_file.filename}")
         track_file.file.seek(0)
         return True
 

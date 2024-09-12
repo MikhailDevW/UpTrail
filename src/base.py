@@ -15,8 +15,7 @@ class CRUDBase:
         session,
     ):
         """
-        Возвращает обьект модели по его id
-        или 404 в случае отсутствия.
+        Возвращает обьект модели по его id или 404 в случае отсутствия.
         """
         async with async_session() as session:
             object = await session.get(self.model, object_id)
