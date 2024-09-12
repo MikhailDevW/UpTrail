@@ -10,7 +10,6 @@ from typing_extensions import Annotated
 
 from src.config import settings
 from src.users.router import current_user
-
 from .constants import GPS_TESTFILES_DIR, GPX_XSD_CUSTOM
 from .crud import add_track, get_all_tracks
 from .tracks_manager import TrackManager
