@@ -23,5 +23,4 @@ if __name__ == "__main__":
         port=settings.DEFAULT_PORT,
         reload=True,
         log_config=log_config,
-        use_colors=True,
     )
