@@ -15,7 +15,7 @@ if not (BACKEND_DIR / BACKEND_DIR_NAME).is_dir():
     )
 
 
-if not (BACKEND_DIR / BACKEND_DIR_NAME / FILENAME).is_file():
+if not (BACKEND_DIR / FILENAME).is_file():
     assert False, (
         f"В директории `{BACKEND_DIR}` не найден файл `{FILENAME}`. "
         f"Убедитесь, что у вас верная структура проекта."
